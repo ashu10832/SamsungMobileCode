@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "358146249703",
+    "firebase_url": "https://smartindiahack-9b2c5.firebaseio.com",
+    "project_id": "smartindiahack-9b2c5",
+    "storage_bucket": "smartindiahack-9b2c5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:358146249703:android:8b33f2128e841971",
+        "android_client_info": {
+          "package_name": "com.example.ashugupta.camerapreviewexample"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "358146249703-2gs6l3p2i5v985mf4ar2gs2e54nkfoti.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBKc6wNdadDYvG9WrqnYW2bygnEfmFnti4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
