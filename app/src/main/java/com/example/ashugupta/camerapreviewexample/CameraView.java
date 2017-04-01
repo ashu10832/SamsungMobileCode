@@ -8,8 +8,12 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.io.IOException;
 import java.security.Policy;
+import java.util.Calendar;
 
 import static android.content.ContentValues.TAG;
 
@@ -38,6 +42,11 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback {
             Camera.Parameters params = mCamera.getParameters();
             params.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
             mCamera.setParameters(params);
+           /* Calendar c = Calendar.getInstance();
+            int seconds = c.get(Calendar.SECOND);
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference myRef = database.getReference("LeftStartTime");
+            myRef.setValue(String.valueOf(seconds));*/
             mCamera.setPreviewDisplay(surfaceHolder);
             mCamera.startPreview();
             Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
