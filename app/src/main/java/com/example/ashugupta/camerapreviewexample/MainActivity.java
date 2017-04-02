@@ -60,9 +60,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         firebaseStorage = FirebaseStorage.getInstance();
-        storageRef = firebaseStorage.getReference().child("Image_Right");
+        storageRef = firebaseStorage.getReference().child("Image_Left");
         database = FirebaseDatabase.getInstance();
-        myRef = database.getReference("hasClicked");
+        //myRef = database.getReference("hasClicked");
         try {
             mCamera = Camera.open();
         } catch (Exception e) {
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
             camera_view.addView(mCameraView);
         }
 
-        myRef = database.getReference("hasClicked");
+       /* myRef = database.getReference("hasClicked");
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -90,20 +90,18 @@ public class MainActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
-      /*  TimerTask task = new TimerTask() {
+        });*/
+        TimerTask task = new TimerTask() {
             @Override
             public void run() {
                 storageRef = firebaseStorage.getReference().child("Images_Left");
                 mCamera.takePicture(null, null, mPicture);
-                myRef = database.getReference("hasClicked");
-                myRef.setValue("Clicked");
                 //Toast.makeText(MainActivity.this, "Image Clicked", Toast.LENGTH_SHORT).show();
             }
         };
         Timer t = new Timer();
-        t.schedule(task, 2000, 2000);
-*/
+        t.schedule(task, 2000, 4000);
+
        // final int[] count = {1};
         ImageButton imgClose = (ImageButton) findViewById(R.id.imgClose);
 
@@ -178,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
         public void onPictureTaken(byte[] data, Camera camera) {
             Log.i(TAG, "onPictureTaken: Image Clicked");
             myRef = database.getReference("hasClicked");
-            myRef.setValue("NotClicked");
+            myRef.setValue("Clicked");
             UploadTask uploadTask = storageRef.putBytes(data);
             uploadTask.addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -192,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.i(TAG, "onSuccess: Image Uploaded");
                     String url = taskSnapshot.getDownloadUrl().toString();
                     Log.i(TAG, "onSuccess: URL:" + url);
-                    myRef = database.getReference("Url Right");
+                    myRef = database.getReference("UrlLeft");
                     myRef.setValue(url);
                 }
             });
