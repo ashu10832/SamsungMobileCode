@@ -6,6 +6,7 @@ import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
+import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -34,6 +35,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Calendar;
@@ -44,7 +46,7 @@ import static android.R.attr.value;
 import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 import static com.example.ashugupta.camerapreviewexample.R.id.imgClose;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
     private Camera mCamera = null;
     private static final String TAG = "MainActivity";
     private CameraView mCameraView = null;
@@ -53,8 +55,10 @@ public class MainActivity extends AppCompatActivity {
     DatabaseReference myRef;
     FirebaseDatabase database;
     String isClicked;
+    String alert;
     String url;
     int leftValue, rightValue;
+    private TextToSpeech tts;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +67,10 @@ public class MainActivity extends AppCompatActivity {
         storageRef = firebaseStorage.getReference().child("Image_Left");
         database = FirebaseDatabase.getInstance();
         //myRef = database.getReference("hasClicked");
+
+
+        tts = new TextToSpeech(MainActivity.this,MainActivity.this);
+
         try {
             mCamera = Camera.open();
         } catch (Exception e) {
@@ -75,23 +83,45 @@ public class MainActivity extends AppCompatActivity {
             camera_view.addView(mCameraView);
         }
 
-       /* myRef = database.getReference("hasClicked");
+        myRef = database.getReference("alert");
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                isClicked = dataSnapshot.getValue(String.class);
-                if(TextUtils.equals(isClicked,"Clicked"));
-                {
-                    mCamera.takePicture(null, null, mPicture);
+                Log.i(TAG, "onDataChange: Alert Changed!");
+                alert = dataSnapshot.getValue(String.class);
+                if(TextUtils.equals(alert,"1")){
+
+                    String tts = "Obstacle is in the front";
+                    Log.d(TAG, "onDataChange: " + "zero");
+                    speakOut(tts);
+                }
+
+                if(TextUtils.equals(alert,"2")){
+
+                    String tts1 = "Obstacle is on the ground";
+                    speakOut(tts1);
+                }
+                if(TextUtils.equals(alert,"3")){
+
+                    String tts2 = "Obstacle is in the left";
+                    speakOut(tts2);
+                }
+                if(TextUtils.equals(alert,"4")){
+
+                    String tts3 = "Obstacle is in the right";
+                    speakOut(tts3);
                 }
             }
+
+
+
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });*/
-        TimerTask task = new TimerTask() {
+        });
+        /*TimerTask task = new TimerTask() {
             @Override
             public void run() {
                 storageRef = firebaseStorage.getReference().child("Images_Left");
@@ -100,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         Timer t = new Timer();
-        t.schedule(task, 2000, 4000);
+        t.schedule(task, 2000, 4000);*/
 
        // final int[] count = {1};
         ImageButton imgClose = (ImageButton) findViewById(R.id.imgClose);
@@ -229,6 +259,28 @@ public class MainActivity extends AppCompatActivity {
                 + "IMG_" + timeStamp + ".jpg");
 
         return mediaFile;
+    }
+
+    private void speakOut(String text ) {
+        tts.speak(text, TextToSpeech.QUEUE_FLUSH,null);
+    }
+
+    @Override
+    public void onInit(int status) {
+        if (status == TextToSpeech.SUCCESS) {
+
+            int result = tts.setLanguage(Locale.UK);
+
+            if (result == TextToSpeech.LANG_MISSING_DATA
+                    || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                Log.d("TTS", "This Language is not supported");
+            } else {
+                speakOut("hello");
+            }
+
+        } else {
+            Log.e("TTS", "Initilization Failed!");
+        }
     }
 }
 
